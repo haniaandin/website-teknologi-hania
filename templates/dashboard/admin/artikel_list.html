@@ -1,0 +1,81 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'dashboard/assets/css/custom.css' %}">
+{% endblock css %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-gradient-primary text-white d-flex justify-content-between align-items-center rounded-top">
+      <h5 class="mb-0">Daftar Artikel</h5>
+      <a href="{% url 'admin_artikel_tambah' %}" class="btn btn-sm btn-light text-primary fw-semibold">+ Tambah</a>
+    </div>
+
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-items-center mb-0" id="datatable-search">
+          <thead class="bg-light text-uppercase text-secondary text-xs font-weight-bold">
+            <tr>
+              <th class="text-start px-3">#</th>
+              <th>Judul Artikel</th>
+              <th>Kategori</th>
+              <th>Status</th>
+              <th class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if artikel_list %}
+              {% for artikel in artikel_list %}
+                <tr>
+                  <td class="px-3">{{ forloop.counter }}</td>
+                  <td>
+                    <strong>{{ artikel.judul }}</strong><br>
+                    {% if artikel.created_by %}
+                      <small class="text-muted">Oleh: {{ artikel.created_by }}</small>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="badge bg-info text-white">{{ artikel.kategori }}</span>
+                  </td>
+                  <td>
+                    {% if artikel.status == 'published' %}
+                    <span class="badge bg-success text-white rounded-pill px-3 py-2">
+                   <i class="fas fa-check-circle me-1"></i> Published
+                    </span>
+                  {% else %}
+                   <span class="badge bg-danger text-white rounded-pill px-3 py-2">
+                   <i class="fas fa-times-circle me-1"></i> Draft
+                    </span>
+                    {% endif %}
+                  </td>
+                  <td class="text-center">
+                    <a href="{% url 'admin_artikel_update' artikel.id %}" class="btn btn-sm btn-outline-warning me-1">Edit</a>
+                    <a href="{% url 'admin_artikel_delete' artikel.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Yakin ingin menghapus artikel ini?')">Hapus</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="5" class="text-center py-4 text-muted">Belum ada artikel yang tersedia.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script src="{% static 'dashboard/assets/js/plugins/datatables.js' %}"></script>
+<script>
+  const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
+    searchable: true,
+    fixedHeight: true,
+    perPage: 10,
+  });
+</script>
+{% endblock js %}
