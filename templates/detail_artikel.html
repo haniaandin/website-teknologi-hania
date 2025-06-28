@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ artikel.judul }} - Artikel{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <h3 class="text-center mb-4">Detail Artikel</h3>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow border-0">
+                
+                {% if artikel.gambar %}
+                    <img src="{{ artikel.gambar.url }}" class="card-img-top img-fluid" alt="{{ artikel.judul }}">
+                {% else %}
+                    <img src="{% static 'img/default.jpg' %}" class="card-img-top img-fluid" alt="Gambar tidak tersedia">
+                {% endif %}
+                
+                <div class="card-body">
+                    <h2 class="card-title mb-3">{{ artikel.judul }}</h2>
+                    
+                    <p class="text-muted mb-2">
+                        🖊️ <strong>Penulis:</strong> {{ artikel.created_by }}<br>
+                        🗂️ <strong>Kategori:</strong> {{ artikel.kategori }}<br>
+                        🕒 <strong>Dipublikasikan:</strong> {{ artikel.created_at|date:"F d, Y - H:i" }}
+                    </p>
+                    
+                    <hr>
+
+                    <div class="card-text" style="text-align: justify;">
+                        {{ artikel.konten|safe }}
+                    </div>
+
+                    <a href="{% url 'artikel:list' %}" class="btn btn-outline-primary mt-4">← Kembali ke Daftar Artikel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
